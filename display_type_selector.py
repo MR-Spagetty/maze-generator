@@ -298,10 +298,8 @@ player_tiles = {
 
 
 def select_type(type):
-    selected = types_of_tile[type]
-    return selected
+    return types_of_tile[type]
 
 
 def get_player_tile(type, tile):
-    selected = player_tiles[type][tile]
-    return selected
+    return player_tiles[type][tile]
