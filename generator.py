@@ -62,6 +62,7 @@ class player:
             if can_move is True and self.directions_opposites[
                     move_direction] in self.map.tiles[self.y + Δy][
                         self.x + Δx].passable_borders:
+                self.map.tiles[self.y + Δy][self.x + Δx].recheck_borders()
                 can_move = self.map.tiles[self.y + Δy][
                     self.x + Δx].passable_borders[self.directions_opposites[
                         move_direction]]
