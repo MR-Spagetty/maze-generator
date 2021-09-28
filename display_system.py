@@ -21,7 +21,8 @@ class display:
         """
         print(x, y)
         matrix = {}
-        for dis_y in range(y + self.view_distance, y - self.view_distance - 1, -1):
+        for dis_y in range(y + self.view_distance, y - self.view_distance - 1,
+                           -1):
             matrix[dis_y] = [
                 [],
                 [],
