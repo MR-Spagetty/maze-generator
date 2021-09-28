@@ -79,8 +79,8 @@ class map:
             y (int): y coordinate of tile to be generated
         """
 
-        outside_y_range = True
-        outside_x_range = True
+        outside_y_range = False
+        outside_x_range = False
 
         if y not in self.tiles:
             self.tiles[y] = {}
@@ -101,11 +101,11 @@ class map:
 
     def print(self, player):
         for y in range(player.y + self.view_distance,
-                       player.y - self.view_distance - 1):
+                       player.y - self.view_distance - 1, -1):
             if y not in self.tiles:
                 self.tiles[y] = {}
             for x in range(player.x + self.view_distance,
-                           player.x - self.view_distance - 1):
+                           player.x - self.view_distance - 1, -1):
                 if x not in self.tiles[y]:
                     self.generate_tile(x, y)
         self.display.print(self.tiles, player.x, player.y, player.tile)
@@ -176,7 +176,7 @@ class map:
             x_to_check = self.x + change_in_x
             y_to_check = self.y + change_in_y
             if y_to_check in self.parent.tiles:
-                if x_to_check in self.parent.tiles:
+                if x_to_check in self.parent.tiles[y_to_check]:
                     passable = self.directions_opposites[border_to_check] in\
                         self.possible_directions_by_type[self.parent.tiles[
                             y_to_check][x_to_check].tile_type]
@@ -190,13 +190,11 @@ class map:
                 del self.passable_borders[border_to_check]
 
         def recheck_borders(self):
-            if '?' in self.passable_borders:
-                unknown_directions = {can_pass: direction
-                                      for direction, can_pass in
-                                      self.passable_borders.items}
-                for value, border in unknown_directions.items():
+            if '?' in self.passable_borders.values():
+                passable_borders = self.passable_borders.copy()
+                for border, value in passable_borders.items():
                     if value != '?':
-                        del unknown_directions[value]
+                        pass
                     else:
                         self.check_border(
                             border)
