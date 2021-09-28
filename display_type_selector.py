@@ -25,7 +25,7 @@ types_of_tile = {
             '##       ',
             '##       ',
             '##     ##'
-        ], 'intersectionno_right': [
+        ], 'intersection_no_right': [
             '##     ##',
             '       ##',
             '       ##',
@@ -101,7 +101,7 @@ types_of_tile = {
             '██       ',
             '██       ',
             '██     ██'
-        ], 'intersectionno_right': [
+        ], 'intersection_no_right': [
             '██     ██',
             '       ██',
             '       ██',
@@ -153,7 +153,155 @@ types_of_tile = {
     }
 }
 
+player_tiles = {
+    'hedge': {
+        'straight_vertical': [
+            '##     ##',
+            '##  ☻  ##',
+            '##  █  ##',
+            '##     ##',
+            '##     ##'
+        ],
+        'straight_horizontal': [
+            '#########',
+            '    ☻    ',
+            '    █    ',
+            '         ',
+            '#########'
+        ], '4-way_intersection': [
+            '##     ##',
+            '    ☻    ',
+            '    █    ',
+            '         ',
+            '##     ##'
+        ], 'intersection_no_left': [
+            '##     ##',
+            '##  ☻    ',
+            '##  █    ',
+            '##       ',
+            '##     ##'
+        ], 'intersection_no_right': [
+            '##     ##',
+            '    ☻  ##',
+            '    █  ##',
+            '       ##',
+            '##     ##'
+        ], 'intersection_no_up': [
+            '#########',
+            '    ☻    ',
+            '    █    ',
+            '         ',
+            '##     ##'
+        ], 'intersection_no_down': [
+            '##     ##',
+            '    ☻    ',
+            '    █    ',
+            '         ',
+            '#########'
+        ], 'end_up': [
+            '##     ##',
+            '##  ☻  ##',
+            '##  █  ##',
+            '##     ##',
+            '#########'
+        ], 'end_down': [
+            '#########',
+            '##  ☻  ##',
+            '##  █  ##',
+            '##     ##',
+            '##     ##'
+        ], 'end_left': [
+            '#########',
+            '    ☻  ##',
+            '    █  ##',
+            '       ##',
+            '#########'
+        ], 'end_right': [
+            '#########',
+            '##  ☻    ',
+            '##  █    ',
+            '##       ',
+            '#########'
+        ]
+    },
+    'solid': {
+        'straight_vertical': [
+            '██     ██',
+            '██  ☻  ██',
+            '██  █  ██',
+            '██     ██',
+            '██     ██'
+        ],
+        'straight_horizontal': [
+            '█████████',
+            '    ☻    ',
+            '    █    ',
+            '         ',
+            '█████████'
+        ], '4-way_intersection': [
+            '██     ██',
+            '    ☻    ',
+            '    █    ',
+            '         ',
+            '██     ██'
+        ], 'intersection_no_left': [
+            '██     ██',
+            '██  ☻    ',
+            '██  █    ',
+            '██       ',
+            '██     ██'
+        ], 'intersection_no_right': [
+            '██     ██',
+            '    ☻  ██',
+            '    █  ██',
+            '       ██',
+            '██     ██'
+        ], 'intersection_no_up': [
+            '█████████',
+            '    ☻    ',
+            '    █    ',
+            '         ',
+            '██     ██'
+        ], 'intersection_no_down': [
+            '██     ██',
+            '    ☻    ',
+            '    █    ',
+            '         ',
+            '█████████'
+        ], 'end_up': [
+            '██     ██',
+            '██  ☻  ██',
+            '██  █  ██',
+            '██     ██',
+            '█████████'
+        ], 'end_down': [
+            '█████████',
+            '██  ☻  ██',
+            '██  █  ██',
+            '██     ██',
+            '██     ██'
+        ], 'end_left': [
+            '█████████',
+            '    ☻  ██',
+            '    █  ██',
+            '       ██',
+            '█████████'
+        ], 'end_right': [
+            '█████████',
+            '██  ☻    ',
+            '██  █    ',
+            '██       ',
+            '█████████'
+        ]
+    }
+}
+
 
 def select_type(type):
     selected = types_of_tile[type]
+    return selected
+
+
+def get_player_tile(type, tile):
+    selected = player_tiles[type][tile]
     return selected
