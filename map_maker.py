@@ -2,6 +2,7 @@
 """
 import random
 from display_type_selector import select_type
+import display_system
 
 
 class map:
@@ -35,6 +36,11 @@ class map:
         # setting up atributes
         self.random = random
         self.random.seed(seed)
+
+        self.display = display_system.display(view_distance, maze_type)
+
+        self.maze_type = maze_type
+
         self.width = width
         self.height = height
         self.has_end = has_end
@@ -72,6 +78,10 @@ class map:
             x (int): x coordinate of tile to be generated
             y (int): y coordinate of tile to be generated
         """
+
+        outside_y_range = True
+        outside_x_range = True
+
         if y not in self.tiles:
             self.tiles[y] = {}
         if self.minimum_y and self.maximum_y:
@@ -79,7 +89,7 @@ class map:
                 outside_y_range = True
             else:
                 outside_y_range = False
-        elif self.minimum_x and self.maximum_x:
+        if self.minimum_x and self.maximum_x:
             if x > self.maximum_x or y < self.minimum_x:
                 outside_x_range = True
             else:
@@ -88,6 +98,17 @@ class map:
             self.tiles[y][x] = self.tile(self, x, y, 'block')
         else:
             self.tiles[y][x] = self.tile(self, x, y)
+
+    def print(self, player):
+        for y in range(player.y + self.view_distance,
+                       player.y - self.view_distance - 1):
+            if y not in self.tiles:
+                self.tiles[y] = {}
+            for x in range(player.x + self.view_distance,
+                           player.x - self.view_distance - 1):
+                if x not in self.tiles[y]:
+                    self.generate_tile(x, y)
+        self.display.print(self.tiles, player.x, player.y, player.tile)
 
     class tile:
         possible_types = [
