@@ -193,8 +193,6 @@ class map:
             if '?' in self.passable_borders.values():
                 passable_borders = self.passable_borders.copy()
                 for border, value in passable_borders.items():
-                    if value != '?':
-                        pass
-                    else:
+                    if value == '?':
                         self.check_border(
                             border)
