@@ -33,8 +33,12 @@ class display:
             for dis_x in range(x - self.view_distance, x +
                                self.view_distance + 1):
                 if (dis_x, dis_y) != (x, y):
+                    if dis_x in tiles[dis_y]:
+                        tile = tiles[dis_y][dis_x].display
+                    else:
+                        tile = self.fill_tile
                     for line_id, line_tile in zip(range(len(matrix[dis_y])),
-                                                  tiles[dis_y][dis_x].display):
+                                                  tile):
                         matrix[dis_y][line_id] += line_tile
                 else:
                     for line_id, line_tile in zip(range(len(matrix[dis_y])),

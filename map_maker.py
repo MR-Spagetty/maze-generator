@@ -5,10 +5,9 @@ from display_type_selector import select_type
 import display_system
 
 
-class map:
+class map_system:
     def __init__(self, seed=random.getrandbits(200), width=-1, height=-1,
-                 has_end=False, maze_type='hedge', view_distance=2,
-                 spawn_center=False):
+                 has_end=False, maze_type='hedge', view_distance=2):
         """constructor of the map object
 
         Args:
@@ -29,9 +28,6 @@ class map:
 
             view_distance (int, optional): how far the player can see.
             Defaults to 2.
-
-            spawn_center (bool, optional): wheather or not the player will
-            spawn in the center of the map. Defaults to False.
         """
         # setting up atributes
         self.random = random
@@ -44,7 +40,7 @@ class map:
         self.width = width
         self.height = height
         self.has_end = has_end
-        self.tiles = {}
+        self.tiles = {0: {}}
         self.tile_displays = select_type(maze_type)
         self.view_distance = view_distance
 
@@ -53,9 +49,6 @@ class map:
         if width == -1:
             self.minimum_x = False
             self.maximum_x = False
-        elif spawn_center:
-            self.maximum_x, r = divmod(width, 2)
-            self.minimum_x = - self.maximum_x - r
         else:
             self.minimum_x = 0
             self.maximum_x = width - 1
@@ -64,50 +57,52 @@ class map:
         if height == -1:
             self.minimum_y = False
             self.maximum_y = False
-        elif spawn_center:
-            self.maximum_y, r = divmod(height, 2)
-            self.minimum_y = - self.maximum_y - r
         else:
             self.minimum_y = 0
             self.maximum_y = height - 1
+        self.tiles[0][0] = self.tile(self, 0, 0, '4-way_intersection')
 
-    def generate_tile(self, x, y):
-        """Generator for the map tiles
+    def generate_from_player(self, player):
+        poss_directions = self.tile.possible_directions_by_type[
+            self.tiles[player.y][player.x].tile_type]
 
-        Args:
-            x (int): x coordinate of tile to be generated
-            y (int): y coordinate of tile to be generated
-        """
+        oppo_needed_directions = [
+            self.tile.directions_opposites[direction]
+            for direction in poss_directions
+        ]
 
-        outside_y_range = False
-        outside_x_range = False
+        possible_tiles_by_direction = {}
+        connected_tiles_by_direction = {}
+        for oppo_direction in oppo_needed_directions:
+            possible_tiles_by_direction[oppo_direction] = []
+            for tile, directions in self.tile.possible_directions_by_type.\
+                    items():
+                for direction in directions:
+                    if direction == oppo_direction:
+                        possible_tiles_by_direction[oppo_direction].append(
+                            tile)
+            connected_tiles_by_direction[oppo_direction] = self.random.choice(
+                possible_tiles_by_direction[oppo_direction])
 
-        if y not in self.tiles:
-            self.tiles[y] = {}
-        if self.minimum_y and self.maximum_y:
-            if y > self.maximum_y or y < self.minimum_y:
-                outside_y_range = True
-            else:
-                outside_y_range = False
-        if self.minimum_x and self.maximum_x:
-            if x > self.maximum_x or y < self.minimum_x:
-                outside_x_range = True
-            else:
-                outside_x_range = False
-        if outside_y_range or outside_x_range:
-            self.tiles[y][x] = self.tile(self, x, y, 'block')
-        else:
-            self.tiles[y][x] = self.tile(self, x, y)
+        for direction in poss_directions:
+            Δx, Δy = self.tile.directions_relative_coordinates[direction]
+            x = player.x + Δx
+            y = player.y + Δy
+
+            if y not in self.tiles:
+                self.tiles[y] = {}
+            if x not in self.tiles[y]:
+                self.tiles[y][x] = self.tile(self, x, y,
+                                             connected_tiles_by_direction[
+                                                self.tile.directions_opposites[
+                                                    direction]])
+        self.tiles[y][x].recheck_borders()
 
     def print(self, player):
         for y in range(player.y + self.view_distance,
                        player.y - self.view_distance - 1, -1):
             if y not in self.tiles:
                 self.tiles[y] = {}
-            for x in range(player.x + self.view_distance,
-                           player.x - self.view_distance - 1, -1):
-                if x not in self.tiles[y]:
-                    self.generate_tile(x, y)
         self.display.print(self.tiles, player.x, player.y, player.tile)
 
     class tile:
